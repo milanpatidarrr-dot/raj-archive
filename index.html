@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Raj Archive ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for our Theme */
+        :root {
+            --baby-pink: #FFD6E8;
+            --blush-pink: #FFC0CB;
+            --text-dark: #4a4a4a;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--baby-pink);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .handwriting {
+            font-family: 'Indie Flower', cursive;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            width: 100vw;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--baby-pink);
+        }
+
+        .active-screen {
+            display: flex;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Gift Box Screen */
+        .gift-box {
+            font-size: 80px;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Password Screen */
+        .password-container input {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 2px solid var(--blush-pink);
+            margin: 10px 0;
+            text-align: center;
+        }
+        .password-container button {
+            background-color: var(--blush-pink);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content Structure */
+        #main-content {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            position: relative;
+        }
+
+        .chapter {
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px dashed var(--blush-pink);
+        }
+
+        /* Journey Map */
+        .journey-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 400px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .road {
+            flex-grow: 1;
+            height: 4px;
+            background-color: var(--blush-pink);
+            position: relative;
+            margin: 0 10px;
+        }
+        .moving-heart {
+            position: absolute;
+            top: -12px;
+            left: 0;
+            font-size: 24px;
+            animation: travel 4s forwards;
+            animation-delay: 1s;
+        }
+        @keyframes travel {
+            to { left: 90%; transform: scale(1.2); }
+        }
+
+        /* Typewriter Letter */
+        .letter-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            max-width: 90%;
+            font-family: 'Indie Flower', cursive;
+            font-size: 20px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        /* Polaroid Gallery */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .polaroid {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: rotate(-3deg);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:hover { transform: scale(1.1) rotate(0deg); z-index: 10; }
+        .polaroid img { width: 150px; height: 150px; object-fit: cover; }
+        .polaroid p { font-family: 'Indie Flower', cursive; text-align: center; margin-top: 10px; }
+
+        /* Counters */
+        .counter-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 300px;
+            font-weight: bold;
+        }
+
+        /* Surprise Buttons */
+        .surprise-btn {
+            background: var(--white);
+            border: 2px solid var(--blush-pink);
+            padding: 15px;
+            border-radius: 30px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+            transition: 0.2s;
+        }
+        .surprise-btn:active { transform: scale(0.95); background: var(--blush-pink); }
+
+        /* Final Screen */
+        #final-screen {
+            background-color: #0b0c10;
+            color: white;
+        }
+        #final-heart {
+            font-size: 100px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .secret-message {
+            display: none;
+            color: var(--blush-pink);
+            font-size: 24px;
+            margin-top: 20px;
+            animation: fadeIn 2s;
+        }
+
+        /* Floating Elements */
+        .floating {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 5s linear infinite;
+            z-index: 9999;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh); opacity: 1; }
+            to { transform: translateY(-10vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="bg-music" loop>
+        <!-- REPLACE 'song.mp3' with your actual uploaded music file name -->
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. Gift Box Screen -->
+    <div id="screen-gift" class="screen active-screen">
+        <h2 class="handwriting" style="margin-bottom: 20px;">Someone made something especially for you...</h2>
+        <div class="gift-box" onclick="openGift()">🎁</div>
+        <p style="margin-top: 20px;">Tap the box</p>
+        <div style="font-size: 40px; margin-top: 20px;" onclick="meow()">🐱</div>
+    </div>
+
+    <!-- 2. Password Screen -->
+    <div id="screen-password" class="screen">
+        <h2>Authentication Required 🔒</h2>
+        <p class="handwriting" style="margin: 15px 0;">Hint: Our First Date ❤️</p>
+        <div class="password-container">
+            <input type="password" id="pass-input" placeholder="DDMMYYYY">
+            <br>
+            <button onclick="checkPassword()">Unlock</button>
+        </div>
+        <p id="error-msg" style="color: red; display: none; margin-top: 10px;">Oops, that's not it cutie! Try again.</p>
+    </div>
+
+    <!-- MAIN WEBSITE CONTENT -->
+    <div id="main-content">
+        
+        <!-- Welcome Chapter -->
+        <div class="chapter" id="ch-welcome">
+            <h1>Happy Girlfriend's Day, Raj ❤️</h1>
+            <p class="handwriting" style="font-size: 22px; margin-top: 10px;">For the girl who turned ordinary days into my favorite memories.</p>
+            <div style="font-size: 50px; margin-top: 30px;">🐱🌸✨</div>
+        </div>
+
+        <!-- The Journey Chapter -->
+        <div class="chapter" id="ch-journey">
+            <h2>Chapter 1: The Journey 🗺️</h2>
+            <div class="journey-container">
+                <div style="text-align: center;">
+                    <div style="font-size: 30px;">🏠</div>
+                    <small>Milan<br>(Indore)</small>
+                </div>
+                <div class="road">
+                    <div class="moving-heart" id="travelling-heart">❤️</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 30px;">🏠</div>
+                    <small>Raj<br>(Jalgaon)</small>
+                </div>
+            </div>
+            <p class="handwriting" style="margin-top: 20px; font-size: 20px; opacity: 0; transition: opacity 1s;" id="journey-text">
+                "No distance is too far when my destination is you."
+            </p>
+        </div>
+
+        <!-- Timeline Chapter -->
+        <div class="chapter" id="ch-timeline">
+            <h2>Chapter 2: How We Began 📖</h2>
+            <div style="text-align: left; margin-top: 20px; font-size: 18px; line-height: 2;">
+                📍 <b>13 Jul 2002</b> - Milan enters the world<br>
+                🐣 <b>18 Sep 2004</b> - Raj enters the world<br>
+                ❤️ <b>1 Jan 2026</b> - First Meeting & First Kiss<br>
+                🌹 <b>8 Jan 2026</b> - First Date<br>
+                💖 <b>Every 8th</b> - Our Monthly Anniversary
+            </div>
+        </div>
+
+        <!-- Letter Chapter -->
+        <div class="chapter" id="ch-letter">
+            <h2>Chapter 3: Things I Never Say Enough 💌</h2>
+            <div class="letter-container" id="love-letter">
+                <!-- Typewriter text will go here -->
+            </div>
+        </div>
+
+        <!-- Gallery Chapter -->
+        <div class="chapter" id="ch-gallery">
+            <h2>Chapter 4: Memories We Made 📸</h2>
+            <p style="margin-bottom: 20px;">(Tap photos to enlarge)</p>
+            <div class="gallery">
+                <!-- REPLACE 'image1.jpg' etc with photos uploaded from your PDF -->
+                <div class="polaroid" onclick="this.style.transform='scale(1.5)'; this.style.zIndex='100'; setTimeout(()=>{this.style.transform=''; this.style.zIndex='1'}, 2000)">
+                    <img src="image1.jpg" alt="Memory 1" onerror="this.src='https://via.placeholder.com/150/FFD6E8/4a4a4a?text=Add+Photo+1'">
+                    <p>Us ❤️</p>
+                </div>
+                <div class="polaroid" onclick="this.style.transform='scale(1.5)'; this.style.zIndex='100'; setTimeout(()=>{this.style.transform=''; this.style.zIndex='1'}, 2000)">
+                    <img src="image2.jpg" alt="Memory 2" onerror="this.src='https://via.placeholder.com/150/FFC0CB/4a4a4a?text=Add+Photo+2'">
+                    <p>My Favorite</p>
+                </div>
+                <div class="polaroid" onclick="this.style.transform='scale(1.5)'; this.style.zIndex='100'; setTimeout(()=>{this.style.transform=''; this.style.zIndex='1'}, 2000)">
+                    <img src="image3.jpg" alt="Memory 3" onerror="this.src='https://via.placeholder.com/150/FFD6E8/4a4a4a?text=Childhood+Raj'">
+                    <p>Baby Rajdevi</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Counters & Surprises -->
+        <div class="chapter" id="ch-interactive">
+            <h2>Chapter 5: The Little Things 🌸</h2>
+            
+            <div class="counter-box">
+                ❤️ Together since First Date: <br><span id="together-counter">...</span>
+            </div>
+            <div class="counter-box">
+                🎂 Days until Raj's Birthday: <br><span id="bday-counter">...</span>
+            </div>
+
+            <div style="margin-top: 30px; width: 100%; text-align: center;">
+                <button class="surprise-btn" onclick="alert('I love you more than words can say. Take a deep breath, I am always with you. ❤️')">🌸 Press when you're sad</button>
+                <button class="surprise-btn" onclick="alert('I am missing you just as much right now. Looking at our photos helps. 🥺')">🥹 Press when you miss me</button>
+                <button class="surprise-btn" onclick="meow(); createPetals();">🐱 Press for emergency cuteness</button>
+            </div>
+        </div>
+
+        <!-- Final Chapter -->
+        <div class="chapter screen" id="final-screen" style="position: relative; display: none;">
+            <div style="font-size: 50px; margin-bottom: 20px;">🌙 ✨ 🐈💤</div>
+            <h2 class="handwriting" style="font-size: 30px;">Final Chapter: Forever Isn't Long Enough</h2>
+            <br>
+            
+            <div id="final-heart" onclick="heartClick()">❤️</div>
+            <p style="margin-top: 10px; color: #555; font-size: 12px;">(Tap the heart 8 times for a secret)</p>
+            
+            <div id="secret-text" class="secret-message">
+                <p>One more thing...</p>
+                <br>
+                <p>I have one question.</p>
+                <br>
+                <p>Will you keep being my favorite person...</p>
+                <br>
+                <p>for the rest of our lives? ❤️</p>
+                <br>
+                <p class="handwriting">M ❤️ R</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Interactions & Logic ---
+
+        function openGift() {
+            document.getElementById('screen-gift').classList.remove('active-screen');
+            document.getElementById('screen-password').classList.add('active-screen');
+        }
+
+        function checkPassword() {
+            const val = document.getElementById('pass-input').value;
+            if (val === "08012026") {
+                document.getElementById('screen-password').classList.remove('active-screen');
+                document.getElementById('main-content').style.display = 'flex';
+                
+                // Play music upon correct password
+                const audio = document.getElementById('bg-music');
+                audio.play().catch(e => console.log("Audio autoplay blocked, needs interaction"));
+
+                // Trigger animations
+                createPetals();
+                setTimeout(() => {
+                    document.getElementById('journey-text').style.opacity = 1;
+                }, 4000); // Shows text after heart travels
+                
+                startTypewriter();
+                startCounters();
+
+                // Show final screen correctly in flow
+                document.getElementById('final-screen').style.display = 'flex';
+                document.getElementById('final-screen').style.position = 'relative';
+
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function meow() {
+            alert("Meow! Raj has received +100 cuddle points. 🐾");
+        }
+
+        // --- Typewriter Effect ---
+        const letterText = "Helloo baby,\n\nJust to tell you i'm never a person who believed in this kind of days but since i met you things have completely changed, i get urge of doing everything i could to make you happy, this is also one of those few things. Hope you liked it, you know your man is little technically slow but still somehow managed to do this because this was the only option left for me to do as we are so far away rn. Also wanted to do few more things but looking at the strict situation you're in i couldn't execute it, sorry about that. Really wishing to keep this relationship forever and lovingg you infinite❤️❤️";
+        
+        let i = 0;
+        function startTypewriter() {
+            if (i < letterText.length) {
+                document.getElementById("love-letter").innerHTML += letterText.charAt(i) === '\n' ? '<br>' : letterText.charAt(i);
+                i++;
+                setTimeout(startTypewriter, 50); // Speed of typing
+            }
+        }
+
+        // --- Counters ---
+        function startCounters() {
+            setInterval(() => {
+                const now = new Date();
+                
+                // Together Since (Jan 8, 2026)
+                const firstDate = new Date("2026-01-08T00:00:00");
+                const diffTime = Math.abs(now - firstDate);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('together-counter').innerText = `${diffDays} wonderful days`;
+
+                // Raj Birthday (Sept 18)
+                let bday = new Date(now.getFullYear(), 8, 18); // Month is 0-indexed (8 = Sept)
+                if (now > bday) bday.setFullYear(now.getFullYear() + 1);
+                const bdayDiff = Math.ceil(Math.abs(bday - now) / (1000 * 60 * 60 * 24));
+                document.getElementById('bday-counter').innerText = `${bdayDiff} days`;
+            }, 1000);
+        }
+
+        // --- Floating Effects ---
+        function createPetals() {
+            const symbols = ['🌸', '❤️', '✨'];
+            for(let i = 0; i < 20; i++) {
+                let el = document.createElement('div');
+                el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                el.classList.add('floating');
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                el.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 5000);
+            }
+        }
+
+        // Easter Egg: Double click background
+        document.body.addEventListener('dblclick', createPetals);
+
+        // --- Hidden Heart Click (Easter Egg) ---
+        let heartClicks = 0;
+        function heartClick() {
+            heartClicks++;
+            const heart = document.getElementById('final-heart');
+            heart.style.transform = `scale(${1 + (heartClicks * 0.1)})`;
+            
+            if (heartClicks >= 8) {
+                heart.style.display = 'none';
+                document.getElementById('secret-text').style.display = 'block';
+                alert("🏆 Achievement Unlocked: Officially Milan's Favorite Human.");
+            }
+        }
+    </script>
+</body>
+</html>
