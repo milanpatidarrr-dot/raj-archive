@@ -1,1 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Raj Archive ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for our Theme */
+        :root {
+            --baby-pink: #FFD6E8;
+            --blush-pink: #FFC0CB;
+            --text-dark: #4a4a4a;
+            --white: #ffffff;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--baby-pink);
+            color: var(--text-dark);
+            overflow: hidden; /* Prevents long scrolling */
+        }
+
+        h1, h2, h3, .handwriting {
+            font-family: 'Indie Flower', cursive;
+        }
+
+        /* Floating Bouquets and Flowers */
+        .flower-decor {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .flower-decor:nth-child(1) { top: 10%; left: 5%; font-size: 3rem; animation-delay: 0s; }
+        .flower-decor:nth-child(2) { top: 20%; right: 10%; font-size: 2.5rem; animation-delay: 1.2s; }
+        .flower-decor:nth-child(3) { bottom: 15%; left: 10%; font-size: 3.5rem; animation-delay: 2.4s; }
+        .flower-decor:nth-child(4) { bottom: 10%; right: 5%; font-size: 2.8rem; animation-delay: 3.6s; }
+        .flower-decor:nth-child(5) { top: 50%; left: 8%; font-size: 2.2rem; animation-delay: 1.5s; }
+        .flower-decor:nth-child(6) { top: 60%; right: 8%; font-size: 3.2rem; animation-delay: 2.8s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(15deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--baby-pink);
+            z-index: 10;
+        }
+
+        .active-screen {
+            display: flex;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Gift Box */
+        .gift-box {
+            font-size: 80px;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            z-index: 20;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Password */
+        .password-container input {
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 2px solid var(--blush-pink);
+            margin: 15px 0;
+            text-align: center;
+            outline: none;
+        }
+        .password-container button {
+            background-color: #ff9a9e;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .password-container button:hover { background-color: #ff858a; transform: translateY(-2px); }
+
+        /* Storybook Chapters (Non-Scrolling) */
+        #main-content {
+            display: none;
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            z-index: 5;
+        }
+
+        .chapter {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            padding: 40px 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .active-chapter {
+            display: flex;
+            animation: slideIn 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Navigation Buttons */
+        .chapter-nav {
+            position: fixed;
+            bottom: 30px;
+            width: 100%;
+            display: none;
+            justify-content: space-between;
+            padding: 0 50px;
+            z-index: 50;
+        }
+        .nav-btn {
+            background: white;
+            border: 2px solid var(--blush-pink);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .nav-btn:hover { background: var(--blush-pink); color: white; }
+        .nav-btn:disabled { opacity: 0; cursor: default; pointer-events: none; }
+
+        /* Journey Map */
+        .journey-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 85%;
+            max-width: 500px;
+            margin: 30px 0;
+        }
+        .road {
+            flex-grow: 1;
+            height: 4px;
+            background-color: var(--blush-pink);
+            position: relative;
+            margin: 0 15px;
+        }
+        .moving-heart {
+            position: absolute;
+            top: -16px;
+            left: 0;
+            font-size: 28px;
+        }
+        @keyframes travel {
+            to { left: 90%; transform: scale(1.3); }
+        }
+
+        /* Typewriter Letter */
+        .letter-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 600px;
+            width: 90%;
+            font-family: 'Indie Flower', cursive;
+            font-size: 22px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        /* Interactive Polaroid Gallery */
+        .gallery-wrapper {
+            position: relative;
+            width: 320px;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .polaroid-slide {
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            background: white;
+            padding: 15px 15px 40px 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-radius: 5px;
+        }
+        .polaroid-slide.active {
+            display: block;
+            animation: popIn 0.6s ease;
+        }
+        .polaroid-slide img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .polaroid-slide p {
+            font-family: 'Indie Flower', cursive;
+            font-size: 22px;
+            margin-top: 15px;
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(2deg); }
+        }
+        .gallery-controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .gallery-btn {
+            background: #ff9a9e;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+            transition: 0.2s;
+        }
+        .gallery-btn:hover { transform: scale(1.1); background: #ff7b81; }
+
+        /* Counters & Buttons */
+        .counter-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin: 10px 0;
+            width: 90%;
+            max-width: 350px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .surprise-btn {
+            background: var(--white);
+            border: 2px solid var(--blush-pink);
+            padding: 15px;
+            border-radius: 30px;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 90%;
+            max-width: 350px;
+            transition: 0.2s;
+        }
+        .surprise-btn:active { transform: scale(0.95); background: var(--blush-pink); color: white; }
+
+        /* Final Screen */
+        #final-screen {
+            background-color: #0b0c10;
+            color: white;
+        }
+        #final-heart {
+            font-size: 120px;
+            cursor: pointer;
+            transition: 0.3s;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        }
+        .secret-message {
+            display: none;
+            color: var(--blush-pink);
+            font-size: 26px;
+            margin-top: 30px;
+            animation: fadeIn 2s;
+        }
+
+        /* Floating interaction petals */
+        .floating {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 4s linear forwards;
+            z-index: 9999;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="bg-music" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Background Decor -->
+    <div class="flower-decor">💐</div>
+    <div class="flower-decor">🌸</div>
+    <div class="flower-decor">🌺</div>
+    <div class="flower-decor">💐</div>
+    <div class="flower-decor">🌷</div>
+    <div class="flower-decor">🌹</div>
+
+    <!-- 1. Gift Box Screen -->
+    <div id="screen-gift" class="screen active-screen">
+        <h2 class="handwriting" style="margin-bottom: 30px; font-size: 32px;">Someone made something especially for you...</h2>
+        <div class="gift-box" onclick="openGift()">🎁</div>
+        <p style="margin-top: 20px; font-weight: bold; font-size: 18px;">Tap the box</p>
+        <div style="font-size: 40px; margin-top: 30px; cursor: pointer; z-index: 20;" onclick="meow()">🐱</div>
+    </div>
+
+    <!-- 2. Password Screen -->
+    <div id="screen-password" class="screen">
+        <h2>Authentication Required 🔒</h2>
+        <p class="handwriting" style="margin: 15px 0; font-size: 24px;">Hint: Our First Date ❤️</p>
+        <div class="password-container">
+            <input type="password" id="pass-input" placeholder="DDMMYYYY">
+            <br>
+            <button onclick="checkPassword()">Unlock Archive</button>
+        </div>
+        <p id="error-msg" style="color: #ff4d4d; display: none; margin-top: 15px; font-weight: bold;">Oops, that's not it cutie! Try again.</p>
+    </div>
+
+    <!-- Storybook Navigation -->
+    <div class="chapter-nav" id="main-nav">
+        <button class="nav-btn" id="btn-prev" onclick="changeChapter(-1)">❮ Back</button>
+        <button class="nav-btn" id="btn-next" onclick="changeChapter(1)">Next ❯</button>
+    </div>
+
+    <!-- MAIN WEBSITE CONTENT (Storybook Chapters) -->
+    <div id="main-content">
+        
+        <!-- Chapter 0: Welcome -->
+        <div class="chapter" id="ch-welcome">
+            <h1 style="font-size: 40px;">Happy Girlfriend's Day, Raj ❤️</h1>
+            <p class="handwriting" style="font-size: 26px; margin-top: 15px;">For the girl who turned ordinary days into my favorite memories.</p>
+            <div style="font-size: 60px; margin-top: 40px;">🐱🌸✨</div>
+        </div>
+
+        <!-- Chapter 1: Journey -->
+        <div class="chapter" id="ch-journey">
+            <h2>Chapter 1: The Journey 🗺️</h2>
+            <div class="journey-container">
+                <div style="text-align: center;">
+                    <div style="font-size: 40px;">🏠</div>
+                    <strong style="font-size: 18px;">Milan</strong><br><small>(Indore)</small>
+                </div>
+                <div class="road">
+                    <div class="moving-heart" id="travelling-heart">❤️</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 40px;">🏠</div>
+                    <strong style="font-size: 18px;">Raj</strong><br><small>(Jalgaon)</small>
+                </div>
+            </div>
+            <p class="handwriting" style="margin-top: 40px; font-size: 26px; opacity: 0; transition: opacity 1s;" id="journey-text">
+                "No distance is too far when my destination is you."
+            </p>
+        </div>
+
+        <!-- Chapter 2: Timeline -->
+        <div class="chapter" id="ch-timeline">
+            <h2>Chapter 2: How We Began 📖</h2>
+            <div style="background: rgba(255,255,255,0.7); padding: 30px; border-radius: 20px; text-align: left; margin-top: 30px; font-size: 20px; line-height: 2.2; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+                📍 <b>13 Jul 2002</b> - Milan enters the world<br>
+                🐣 <b>18 Sep 2004</b> - Raj enters the world<br>
+                ❤️ <b>1 Jan 2026</b> - First Meeting & First Kiss<br>
+                🌹 <b>8 Jan 2026</b> - First Date<br>
+                💖 <b>Every 8th</b> - Our Monthly Anniversary
+            </div>
+        </div>
+
+        <!-- Chapter 3: Letter -->
+        <div class="chapter" id="ch-letter">
+            <h2 style="margin-bottom: 20px;">Chapter 3: Things I Never Say Enough 💌</h2>
+            <div class="letter-container" id="love-letter">
+                <!-- Typewriter text injects here -->
+            </div>
+        </div>
+
+        <!-- Chapter 4: 10 Image Gallery -->
+        <div class="chapter" id="ch-gallery">
+            <h2>Chapter 4: Memories We Made 📸</h2>
+            
+            <div class="gallery-wrapper">
+                <div class="polaroid-slide active" style="transform: rotate(2deg);">
+                    <img src="IMG_1075 2.jpg" alt="Memory 1">
+                    <p>Us ❤️</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(-3deg);">
+                    <img src="PHOTO-2026-07-26-21-35-12.jpg" alt="Memory 2">
+                    <p>My Favorite</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(1deg);">
+                    <img src="IMG_1060 2.jpg" alt="Memory 3">
+                    <p>Beautiful</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(-2deg);">
+                    <img src="PHOT0-2026-07-26-21-35-09 2.jpg" alt="Memory 4">
+                    <p>Baby Rajdevi</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(3deg);">
+                    <img src="PHOT0-2026-07-26-21-35-12 2.jpg" alt="Memory 5">
+                    <p>So cute</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(-1deg);">
+                    <img src="PHOT0-2026-07-26-21-35-11.jpg" alt="Memory 6">
+                    <p>Perfect</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(2deg);">
+                    <img src="image1.jpg.heic" alt="Memory 7">
+                    <p>Smiles</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(-4deg);">
+                    <img src="image2.jpg.HEIC" alt="Memory 8">
+                    <p>Forever</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(1deg);">
+                    <img src="image3.jpg.heic" alt="Memory 9">
+                    <p>Together</p>
+                </div>
+                <div class="polaroid-slide" style="transform: rotate(-2deg);">
+                    <img src="image4.jpg.JPG" alt="Memory 10">
+                    <p>Always</p>
+                </div>
+            </div>
+
+            <div class="gallery-controls">
+                <button class="gallery-btn" onclick="slideGallery(-1)">❮</button>
+                <button class="gallery-btn" onclick="slideGallery(1)">❯</button>
+            </div>
+            <p style="margin-top: 10px; color: #777;">(Slide through our moments)</p>
+        </div>
+
+        <!-- Chapter 5: Little Things -->
+        <div class="chapter" id="ch-interactive">
+            <h2>Chapter 5: The Little Things 🌸</h2>
+            
+            <div class="counter-box" style="margin-top: 30px;">
+                ❤️ Together since First Date: <br><span id="together-counter" style="color: #ff6b81; font-size: 22px;">...</span>
+            </div>
+            <div class="counter-box">
+                🎂 Days until Raj's Birthday: <br><span id="bday-counter" style="color: #ff6b81; font-size: 22px;">...</span>
+            </div>
+
+            <div style="margin-top: 40px; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <button class="surprise-btn" onclick="alert('I love you more than words can say. Take a deep breath, I am always with you. ❤️')">🌸 Press when you're sad</button>
+                <button class="surprise-btn" onclick="alert('I am missing you just as much right now. Looking at our photos helps. 🥺')">🥹 Press when you miss me</button>
+                <button class="surprise-btn" onclick="meow(); createPetals();">🐱 Press for emergency cuteness</button>
+            </div>
+        </div>
+
+        <!-- Final Chapter -->
+        <div class="chapter" id="final-screen" style="background-color: #0b0c10;">
+            <div style="font-size: 60px; margin-bottom: 20px;">🌙 ✨ 🐈💤</div>
+            <h2 class="handwriting" style="font-size: 36px; color: white;">Final Chapter: Forever Isn't Long Enough</h2>
+            <br><br>
+            
+            <div id="final-heart" onclick="heartClick()">❤️</div>
+            <p style="margin-top: 20px; color: #888; font-size: 14px;">(Tap the heart 8 times for a secret)</p>
+            
+            <div id="secret-text" class="secret-message">
+                <p>One more thing...</p><br>
+                <p>I have one question.</p><br>
+                <p>Will you keep being my favorite person...</p><br>
+                <p>for the rest of our lives? ❤️</p><br>
+                <p class="handwriting" style="font-size: 32px; margin-top: 20px;">M ❤️ R</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Intro Logic ---
+        function openGift() {
+            document.getElementById('screen-gift').classList.remove('active-screen');
+            document.getElementById('screen-password').classList.add('active-screen');
+        }
+
+        function checkPassword() {
+            const val = document.getElementById('pass-input').value;
+            if (val === "08012026") {
+                document.getElementById('screen-password').classList.remove('active-screen');
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('main-nav').style.display = 'flex';
+                
+                // Play music
+                document.getElementById('bg-music').play().catch(e => console.log("Audio needs interaction"));
+
+                createPetals();
+                startCounters();
+                updateChapterView();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        // --- Storybook Chapter Navigation ---
+        let currentCh = 0;
+        const chapters = document.querySelectorAll('.chapter');
+        let letterStarted = false;
+
+        function changeChapter(dir) {
+            currentCh += dir;
+            updateChapterView();
+        }
+
+        function updateChapterView() {
+            // Manage Buttons
+            document.getElementById('btn-prev').disabled = (currentCh === 0);
+            
+            // Hide Next button on final screen to trap them in the moment
+            if(currentCh === chapters.length - 1) {
+                document.getElementById('btn-next').style.display = 'none';
+                document.getElementById('main-nav').style.justifyContent = 'flex-start';
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+                document.getElementById('main-nav').style.justifyContent = 'space-between';
+            }
+
+            // Manage Screens
+            chapters.forEach((ch, index) => {
+                if(index === currentCh) {
+                    ch.classList.add('active-chapter');
+                } else {
+                    ch.classList.remove('active-chapter');
+                }
+            });
+
+            // Chapter Specific Triggers
+            if(chapters[currentCh].id === 'ch-journey') {
+                const heart = document.getElementById('travelling-heart');
+                heart.style.animation = 'none';
+                void heart.offsetWidth; // trigger reflow
+                heart.style.animation = 'travel 4s forwards';
+                setTimeout(() => document.getElementById('journey-text').style.opacity = 1, 3800);
+            }
+
+            if(chapters[currentCh].id === 'ch-letter' && !letterStarted) {
+                letterStarted = true;
+                setTimeout(startTypewriter, 500);
+            }
+        }
+
+        // --- Gallery Slider ---
+        let currentPic = 0;
+        const slides = document.querySelectorAll('.polaroid-slide');
+        
+        function slideGallery(dir) {
+            slides[currentPic].classList.remove('active');
+            currentPic = (currentPic + dir + slides.length) % slides.length;
+            slides[currentPic].classList.add('active');
+        }
+
+        // --- Typewriter Effect ---
+        const letterText = "Helloo baby,\n\nJust to tell you i'm never a person who believed in this kind of days but since i met you things have completely changed, i get urge of doing everything i could to make you happy, this is also one of those few things. Hope you liked it, you know your man is little technically slow but still somehow managed to do this because this was the only option left for me to do as we are so far away rn. Also wanted to do few more things but looking at the strict situation you're in i couldn't execute it, sorry about that. Really wishing to keep this relationship forever and lovingg you infinite❤️❤️";
+        let i = 0;
+        function startTypewriter() {
+            if (i < letterText.length) {
+                document.getElementById("love-letter").innerHTML += letterText.charAt(i) === '\n' ? '<br>' : letterText.charAt(i);
+                i++;
+                setTimeout(startTypewriter, 40);
+            }
+        }
+
+        // --- Counters ---
+        function startCounters() {
+            setInterval(() => {
+                const now = new Date();
+                
+                // Together Since (Jan 8, 2026)
+                const firstDate = new Date("2026-01-08T00:00:00");
+                const diffTime = Math.abs(now - firstDate);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('together-counter').innerText = `${diffDays} wonderful days`;
+
+                // Raj Birthday (Sept 18)
+                let bday = new Date(now.getFullYear(), 8, 18); 
+                if (now > bday) bday.setFullYear(now.getFullYear() + 1);
+                const bdayDiff = Math.ceil(Math.abs(bday - now) / (1000 * 60 * 60 * 24));
+                document.getElementById('bday-counter').innerText = `${bdayDiff} days`;
+            }, 1000);
+        }
+
+        // --- Interactions & Effects ---
+        function meow() {
+            alert("Meow! Raj has received +100 cuddle points. 🐾");
+        }
+
+        function createPetals() {
+            const symbols = ['🌸', '❤️', '✨', '💐'];
+            for(let j = 0; j < 25; j++) {
+                let el = document.createElement('div');
+                el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                el.classList.add('floating');
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                el.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 6000);
+            }
+        }
+        document.body.addEventListener('dblclick', createPetals);
+
+        // --- Secret Heart ---
+        let heartClicks = 0;
+        function heartClick() {
+            heartClicks++;
+            const heart = document.getElementById('final-heart');
+            heart.style.transform = `scale(${1 + (heartClicks * 0.15)})`;
+            
+            if (heartClicks >= 8) {
+                heart.style.display = 'none';
+                document.getElementById('secret-text').style.display = 'block';
+                createPetals(); // Celebrate unlock
+                alert("🏆 Achievement Unlocked: Officially Milan's Favorite Human.");
+            }
+        }
+    </script>
+</body>
+</html>
